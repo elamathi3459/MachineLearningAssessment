@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<style>
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit], button {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover, button:hover {
+  background-color: #45a049;
+}
+
+div {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+#row_num, #col_num {
+	display: none
+}
+
+ul{
+	list-style: none
+}
+</style>
+<body>
+	<h2>Get Corner Points</h2>
+<div>
+
+  <form action="{{ url_for('predict')}}" method="post">
+    <label for="cornerPoints">What is the cornerPoints?</label>
+    <input type="text" id="second" name="cornerPoints" required="required">
+	
+	 <label for="row">Enter Row Details</label>
+    <input type="text" id="row" name="row" required="required">
+	
+	 <label for="col">Enter Column Details</label>
+    <input type="text" id="col" name="col" required="required">
+	
+	<button id="sub" type="submit ">Calculates Pixel Coordinate values for an Image</button>
+  </form>
+        <p id='row_num'>{{ row_num }}</p>
+		<p id='col_num'>{{ col_num }}</p>
+        <h1 id='error'>{{ error }}</h1>
+        <br><h3 class='commaSeparated' id='matrix'>{{ prediction_text }}</h3>
+	
+</div>
+<script>
+	var mat = document.getElementById('matrix').innerHTML;
+	var row_num = document.getElementById('row_num').innerHTML;
+	var col_num = document.getElementById('col_num').innerHTML;
+	
+	var val = parseInt(row_num) * parseInt(col_num);
+	console.log(val);
+	
+	var separateList = '<ul>'
+
+	var allTheData = document.querySelector('.commaSeparated').textContent.trim().split('],');
+	var counts=1;
+	separateList += '<li>';
+	if(allTheData.length > 1){
+		allTheData.forEach(function(value) {
+			if(counts!=parseInt(col_num)){
+				separateList +=  value + '],';
+			}
+			else{
+				var sl = value.slice(-2);
+				if(sl === "]]"){
+					separateList +=  value + '</li>';
+				}
+				else{
+					separateList +=  value + ']</li><li>';
+				}
+				counts = 0;
+			}
+			  counts++;
+		});
+	}
+	separateList += '</ul>';
+	document.querySelector(".commaSeparated").innerHTML = separateList;
+
+</script>
+</body>
+</html>
